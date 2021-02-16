@@ -1,0 +1,57 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.modal-90w{
+  width: 90w
+}
+
+.selected{
+  background-color: pink;
+}
+.total{
+  margin-left: 30px;
+  margin-right: 100px;
+  font-weight: bold;
+  font-size: large
+}
+
+.summary{
+  font-weight: bold;
+  font-size: large;
+}
+.tbStyle{
+  border: 1px solid black;
+  border-collapse: collapse;
+  width:137px;
+  height: 35px;
+}
+.cell{
+  border:0.5px solid black;
+  width:135px;
+  height: 35px;
+  padding:2px;
+
+}
+.table_checkbox {
+  padding-right: 15px;
+  padding-left:10px;
+}
+.totalBoxes{
+  display: flex;
+  flex-direction: row;
+  background-color: lightblue;
+  width: 30%
+}
+.sumBoxes{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 30%
+}
+.btn{
+  background-color: #0099ff;
+  color: white;
+  font-weight: bold;
+  margin: 2px;
+}
