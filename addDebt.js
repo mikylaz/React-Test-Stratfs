@@ -16,10 +16,13 @@ class AddData extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
+
+  //set state to be user input
   handleChange(event) {
       this.setState({[event.target.name]: event.target.value})
   }
 
+  //calling the addData thunk to add the new row to redux state
   handleSubmit(event) {
     event.preventDefault()
     let items = [...this.props.data]
@@ -37,6 +40,8 @@ class AddData extends React.Component {
     )
     this.props.close()
   }
+
+  //rendering react boostrap form
   render() {
     return (
       <Form onSubmit={this.handleSubmit} style={{margin: '10px'}}>
@@ -109,9 +114,13 @@ class AddData extends React.Component {
     )
   }
 }
+
+//getting data from store to props
 const mapState = state => ({
   data: state.data
 })
+
+//getting the postData thunk to props
 const mapDispatch = dispatch => ({
   addData: (newData) => dispatch(postData(newData))
 })
