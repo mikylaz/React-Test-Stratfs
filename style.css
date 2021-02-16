@@ -41,7 +41,7 @@ body {
   display: flex;
   flex-direction: row;
   background-color: lightblue;
-  width: 30%
+  width: 45%
 }
 .sumBoxes{
   display: flex;
@@ -49,9 +49,4 @@ body {
   justify-content: space-between;
   width: 30%
 }
-.btn{
-  background-color: #0099ff;
-  color: white;
-  font-weight: bold;
-  margin: 2px;
-}
+

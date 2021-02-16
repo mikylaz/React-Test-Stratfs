@@ -15,8 +15,8 @@ class App extends React.Component {
       show: false,
       total_balance: 0,
       count: 0,
-      remove_id: [],
-      remove_balance: [],
+      selected_id: [],
+      selected_balance: [],
       allchekced: false,
     }
     this.handleClose = this.handleClose.bind(this)
@@ -25,69 +25,73 @@ class App extends React.Component {
     this.handleAllChecked = this.handleAllChecked.bind(this)
     }
 
+  //get all debt data from redux
   componentDidMount() {
     this.props.getData()
   }
 
+  // close the modal
   handleClose() {
     this.setState({show: false})
   }
 
+  // invoke below function whenver select all box is clicked, when the checkbox is checked, check all individual boxes, otherwise uncheck all the other boxes
 handleAllChecked(event){
   if (event.target.checked){
     let newBalance = 0
-    let new_remove_id = []
-    let new_remove_balance = []
+    let new_selected_id = []
+    let new_selected_balance = []
     for(let i = 0; i< this.props.data.length; i++){
       newBalance += this.props.data[i].balance
-      new_remove_id.push(this.props.data[i].id)
-      new_remove_balance.push({id: this.props.data[i].id, balance: this.props.data[i].balance})
+      new_selected_id.push(this.props.data[i].id)
+      new_selected_balance.push({id: this.props.data[i].id, balance: this.props.data[i].balance})
     }
-    this.setState({allchekced: true, total_balance: newBalance, remove_id: new_remove_id, remove_balance: new_remove_balance, count:this.props.data.length })
+    this.setState({allchekced: true, total_balance: newBalance, selected_id: new_selected_id, selected_balance: new_selected_balance, count:this.props.data.length })
 
   }
   else{
-    this.setState({allchecked: false, total_balance: 0, remove_id: [], remove_balance: [], count:0})
+    this.setState({allchecked: false, total_balance: 0, selected_id: [], selected_balance: [], count:0})
   }
 }
 
+  //check and uncheck individual checkbox and calculate checked row count and total balance
  handleChange(balance, id) {
     return event=> {
         console.log('check state: ',event.target.checked)
         if(event.target.checked){
           this.setState({total_balance: this.state.total_balance+balance,
           count: this.state.count+1})
-          if(!(this.state.remove_id.includes(id))){
-            this.setState({remove_id:[...this.state.remove_id, id]})
-            this.setState({remove_balance: [...this.state.remove_balance, {id:id, balance:balance}]})
+          if(!(this.state.selected_id.includes(id))){
+            this.setState({selected_id:[...this.state.selected_id, id]})
+            this.setState({selected_balance: [...this.state.selected_balance, {id:id, balance:balance}]})
           }
         }
         else{
           this.setState({total_balance: this.state.total_balance-balance,
           count: this.state.count-1, allchecked:false})
-          if(this.state.remove_id.includes(id)){
-            this.setState({remove_id:this.state.remove_id.filter(elm => elm!==id)})
-            this.setState({remove_balance:this.state.remove_balance.filter(elm => Number(elm.id)!==Number(id))})
+          if(this.state.selected_id.includes(id)){
+            this.setState({selected_id:this.state.selected_id.filter(elm => elm!==id)})
+            this.setState({selected_balance:this.state.selected_balance.filter(elm => Number(elm.id)!==Number(id))})
           }
         }
     };
 }
 
-
-  handleDelete(remove_id, remove_balance) {
+  //delete selected rows
+  handleDelete(selected_id, selected_balance) {
     let newBalance = 0
     let newCount = 0
-    for(let i =0; i< remove_balance.length; i++){
-      newBalance -= remove_balance[i].balance
+    for(let i =0; i< selected_balance.length; i++){
+      newBalance -= selected_balance[i].balance
       newCount -= 1
     }
-    this.setState({total_balance: this.state.total_balance+newBalance, count:this.state.count+newCount, remove_id: [], remove_balance: []})
-    this.props.removeData(remove_id)
+    this.setState({total_balance: this.state.total_balance+newBalance, count:this.state.count+newCount, selected_id: [], selected_balance: []})
+    this.props.removeData(selected_id)
   }
 
   render() {
     const data = this.props.data
-    console.log('remove_id: ', this.state.remove_id)
+    console.log('selected_id: ', this.state.selected_id)
     return (
       <div>
         <table >
@@ -107,8 +111,8 @@ handleAllChecked(event){
           {data &&
             data.map(element => {
               return (
-                <tr key = {element.id} className={!(this.state.remove_id.includes(element.id))? 'selected': ''}>
-                 <td className={'table_checkbox'}><input type="checkbox" onChange = {this.handleChange(element.balance, element.id)} checked={this.state.remove_id.includes(element.id)}/>{' '}</td>
+                <tr key = {element.id} className={!(this.state.selected_id.includes(element.id))? 'selected': ''}>
+                 <td className={'table_checkbox'}><input type="checkbox" onChange = {this.handleChange(element.balance, element.id)} checked={this.state.selected_id.includes(element.id)}/>{' '}</td>
                  <td><div className={'cell'}>{element.creditorName}</div></td>
                  <td><div className={'cell'}>{element.firstName}</div></td>
                  <td><div className={'cell'}>{element.lastName}</div></td>
@@ -119,16 +123,18 @@ handleAllChecked(event){
             })}
           </tbody>
         </table>
-        <button className={'btn'} onClick={() => this.setState({show: true})}>Add Debt</button>
-        <button className={'btn'} onClick={()=> this.handleDelete(this.state.remove_id, this.state.remove_balance)}>Delete Debt</button>
+        <button style={{backgroundColor: '#0099ff', margin: '5px', color:'white', border: 'none'}} onClick={() => this.setState({show: true})}>Add Debt</button>
+        <button style={{backgroundColor: '#0099ff', margin: '5px', color:'white', border: 'none'}} onClick={()=> this.handleDelete(this.state.selected_id, this.state.selected_balance)}>Delete Debt</button>
+
         <div className = {'totalBoxes'}>
-        <div className={'total'}>Total: </div>
-        <div className={'total'}>{this.state.total_balance}</div>
+          <div className={'total'}>Total: </div>
+          <div className={'total'}>{this.state.total_balance}</div>
         </div>
         <div className={'sumBoxes'}>
           <div className={'summary'}>Total Row Count: {data.length}</div>
           <div className={'summary'}>Check Row Count: {this.state.count}</div>
         </div>
+        {/*when 'add debt' button is clicked, show modal for adding a row, reders the <AddDebt> component */}
         <div>
             <Modal show={this.state.show} onHide={this.handleClose}>
               <Modal.Header closeButton>

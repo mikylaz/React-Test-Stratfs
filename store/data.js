@@ -11,11 +11,13 @@ const DELETE_DATA = 'DELETE_DATA'
  */
 const getData = data => ({type: GET_DATA, data})
 
+//adding a new row
 export const postData = newData =>({
   type: ADD_DATA,
   newData
 })
 
+//deleting row(s)
 export const deleteData = ids => ({
   type: DELETE_DATA,
   ids
@@ -23,6 +25,8 @@ export const deleteData = ids => ({
 // /**
 //  * THUNK CREATORS
 //  */
+
+//fetch data from probided url using axios.get
 export const fetchData = () => {
   return async dispatch => {
     try {
